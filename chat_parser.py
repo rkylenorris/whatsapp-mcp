@@ -49,4 +49,4 @@ def import_chat_log(path: Path) -> list[Message]:
         if current_msg:
             messages.append(current_msg)
 
-    return messages
+    return list(sorted(messages, key=lambda m: m.timestamp, reverse=True))
