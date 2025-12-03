@@ -1,5 +1,4 @@
 from mcp.server.fastmcp import FastMCP
-# from test_data import load_fake_messages
 from chat_parser import import_chat_log
 from pathlib import Path
 
