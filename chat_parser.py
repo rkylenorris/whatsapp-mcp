@@ -2,6 +2,7 @@ import re
 from datetime import datetime
 from pathlib import Path
 from models import Message
+from typing import Callable
 
 MESSAGE_PATTERN = re.compile(
     r"^(?P<date>[^-]+?) - (?:(?P<author>[^:]+?): )?(?P<text>.*)$"
@@ -9,7 +10,7 @@ MESSAGE_PATTERN = re.compile(
 DATE_FORMAT = "%m/%d/%y, %I:%M %p"
 
 
-def import_chat_log(path: Path) -> list[Message]:
+def import_chat_log(path: Path, filter_by: Callable | None = None) -> list[Message]:
 
     if not path.exists():
         raise FileNotFoundError(f"File {path.name} not found.")
@@ -48,5 +49,9 @@ def import_chat_log(path: Path) -> list[Message]:
 
         if current_msg:
             messages.append(current_msg)
+
+    if filter_by:
+        filtered = list(filter(filter_by, messages))
+        return list(sorted(filtered, key=lambda m: m.timestamp))
 
     return list(sorted(messages, key=lambda m: m.timestamp, reverse=True))
